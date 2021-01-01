@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import pet, { ANIMALS } from "@frontendmasters/pet";
+import useDropdown from "./useDropdown";
 
 const SearchParams = () => {
-  const [location, setLocation] = useState("San Francisco, CA");
-  const [animal, setAnimal] = useState("dog");
   const [breeds, setBreeds] = useState([]);
-  const [breed, setBreed] = useState("");
+  const [location, setLocation] = useState("Seattle, WA");
+  const [animal, AnimalDropdown] = useDropdown("Animal", "dog", ANIMALS);
+  const [breed, BreedDropdown, setBreed] = useDropdown("Breed", "", breeds);
   const [pets, setPets] = useState([]);
 
   useEffect(() => {
@@ -19,7 +20,7 @@ const SearchParams = () => {
     }
 
     fetchBreeds().catch(console.error);
-  }, [animal]);
+  }, [animal, setBreeds, setBreed]);
 
   async function searchPets() {
     const { animals } = await pet.animals({
@@ -48,40 +49,9 @@ const SearchParams = () => {
           />
         </label>
 
-        <label htmlFor="animal">
-          Animal
-          <select
-            id="animal"
-            value={animal}
-            onBlur={e => setAnimal(e.target.value)}
-            onChange={e => setAnimal(e.target.value)}
-          >
-            <option>All</option>
-            {ANIMALS.map(animal => (
-              <option value={animal} key={animal}>
-                {animal}
-              </option>
-            ))}
-          </select>
-        </label>
+        <AnimalDropdown />
 
-        <label htmlFor="breed">
-          Breed
-          <select
-            id="breed"
-            value={breed}
-            onChange={e => setBreed(e.target.value)}
-            onBlur={e => setBreed(e.target.value)}
-            disabled={breeds.length === 0}
-          >
-            <option>All</option>
-            {breeds.map(breed => (
-              <option key={breed} value={breed}>
-                {breed}
-              </option>
-            ))}
-          </select>
-        </label>
+        <BreedDropdown />
 
         <button type="submit">Search</button>
       </form>
