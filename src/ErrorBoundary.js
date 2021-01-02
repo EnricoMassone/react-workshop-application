@@ -7,6 +7,8 @@ class ErrorBoundary extends React.Component {
     shouldRedirect: false
   };
 
+  timeoutId = null;
+
   static getDerivedStateFromError() {
     return {
       hasError: true
@@ -14,13 +16,22 @@ class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, info) {
-    console.error("An error has occurred inside your application", error, info);
+    console.error("An error has been caught by error boundary", error, info);
   }
 
   componentDidUpdate() {
     const { hasError } = this.state;
     if (hasError) {
-      setTimeout(() => this.setState({ shouldRedirect: true }), 5000);
+      this.timeoutId = setTimeout(
+        () => this.setState({ shouldRedirect: true }),
+        5000
+      );
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.timeoutId) {
+      clearTimeout(this.timeoutId);
     }
   }
 
@@ -34,8 +45,9 @@ class ErrorBoundary extends React.Component {
     if (hasError) {
       return (
         <div className="error-banner">
-          Ooops...an error has occurred! Click <Link to="/">here</Link> to go
-          back to the home page or wait for five seconds.
+          Ooops...an error has occurred in your application <br />
+          Click <Link to="/">here</Link> to go back to the home page or wait for
+          five seconds.
         </div>
       );
     }

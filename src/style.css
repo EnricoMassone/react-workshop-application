@@ -341,3 +341,12 @@ header {
   font-weight: bold;
   font-size: 1.8rem;
 }
+
+.error-banner {
+  color: #c03440;
+  font-family: inherit;
+  font-weight: bold;
+  font-size: 1.8rem;
+  text-align: center;
+  margin-top: 2rem;
+}
