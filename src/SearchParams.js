@@ -38,12 +38,14 @@ const SearchParams = () => {
         type: animal,
         breed
       });
-      searchResults = animals;
+      searchResults = animals || [];
+    } catch (error) {
+      console.error("Error while searching pets", error);
     } finally {
       setLoading(false);
     }
 
-    setPets(searchResults || []);
+    setPets(searchResults);
   }
 
   return (
@@ -51,7 +53,7 @@ const SearchParams = () => {
       <form
         onSubmit={e => {
           e.preventDefault();
-          searchPets().catch(console.error);
+          searchPets();
         }}
       >
         <label htmlFor="location">
