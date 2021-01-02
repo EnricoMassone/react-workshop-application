@@ -11,6 +11,7 @@ const SearchParams = () => {
   const [breed, BreedDropdown, setBreed] = useDropdown("Breed", "", breeds);
   const [pets, setPets] = useState([]);
   const [theme, setTheme] = useContext(ThemeContext);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function fetchBreeds() {
@@ -26,12 +27,23 @@ const SearchParams = () => {
   }, [animal, setBreeds, setBreed]);
 
   async function searchPets() {
-    const { animals } = await pet.animals({
-      location,
-      type: animal,
-      breed
-    });
-    setPets(animals || []);
+    setPets([]);
+    setLoading(true);
+
+    let searchResults = [];
+
+    try {
+      const { animals } = await pet.animals({
+        location,
+        type: animal,
+        breed
+      });
+      searchResults = animals;
+    } finally {
+      setLoading(false);
+    }
+
+    setPets(searchResults || []);
   }
 
   return (
@@ -76,7 +88,7 @@ const SearchParams = () => {
         </button>
       </form>
 
-      <SearchResults pets={pets} />
+      <SearchResults pets={pets} loading={loading} />
     </div>
   );
 };

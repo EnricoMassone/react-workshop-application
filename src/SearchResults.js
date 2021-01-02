@@ -1,7 +1,15 @@
 import React from "react";
 import Pet from "./Pet";
 
-const SearchResults = ({ pets }) => {
+const SearchResults = ({ pets, loading }) => {
+  if (loading) {
+    return (
+      <div className="search">
+        <h1>Loading...</h1>
+      </div>
+    );
+  }
+
   return (
     <div className="search">
       {pets && pets.length > 0 ? (
