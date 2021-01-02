@@ -3,6 +3,8 @@ import pet from "@frontendmasters/pet";
 import Carousel from "./Carousel";
 import ErrorBoundary from "./ErrorBoundary";
 import ThemeContext from "./ThemeContext";
+import Modal from "./Modal";
+import { navigate } from "@reach/router";
 
 class Details extends React.Component {
   state = {
@@ -12,7 +14,20 @@ class Details extends React.Component {
     location: "",
     breed: "",
     description: "",
-    media: []
+    media: [],
+    url: "",
+    showModal: false
+  };
+
+  toggleModal = () => {
+    this.setState(({ showModal }) => ({
+      showModal: !showModal
+    }));
+  };
+
+  adoptPet = () => {
+    const { url } = this.state;
+    navigate(url);
   };
 
   componentDidMount() {
@@ -27,7 +42,8 @@ class Details extends React.Component {
         breed: animal.breeds.primary,
         description: animal.description,
         media: animal.photos,
-        location: `${animal.contact.address.city}, ${animal.contact.address.state}`
+        location: `${animal.contact.address.city}, ${animal.contact.address.state}`,
+        url: animal.url
       });
     };
 
@@ -45,7 +61,15 @@ class Details extends React.Component {
       );
     }
 
-    const { name, animal, location, breed, description, media } = this.state;
+    const {
+      name,
+      animal,
+      location,
+      breed,
+      description,
+      media,
+      showModal
+    } = this.state;
 
     return (
       <div className="details">
@@ -55,13 +79,45 @@ class Details extends React.Component {
 
         <ThemeContext.Consumer>
           {([theme]) => (
-            <button type="button" style={{ backgroundColor: theme }}>
+            <button
+              type="button"
+              style={{ backgroundColor: theme }}
+              onClick={this.toggleModal}
+            >
               Adopt {name}
             </button>
           )}
         </ThemeContext.Consumer>
 
         <p>{description}</p>
+
+        {showModal ? (
+          <Modal>
+            <h1>Would you like to adopt {name} ?</h1>
+            <div className="buttons">
+              <ThemeContext.Consumer>
+                {([theme]) => (
+                  <React.Fragment>
+                    <button
+                      type="button"
+                      style={{ backgroundColor: theme }}
+                      onClick={this.adoptPet}
+                    >
+                      Yes
+                    </button>
+                    <button
+                      type="button"
+                      style={{ backgroundColor: theme }}
+                      onClick={this.toggleModal}
+                    >
+                      No
+                    </button>
+                  </React.Fragment>
+                )}
+              </ThemeContext.Consumer>
+            </div>
+          </Modal>
+        ) : null}
       </div>
     );
   }
