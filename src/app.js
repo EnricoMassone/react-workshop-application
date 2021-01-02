@@ -4,6 +4,7 @@ import SearchParams from "./SearchParams";
 import { Link, Router } from "@reach/router";
 import Details from "./Details";
 import NotFound from "./NotFound";
+import ErrorBoundary from "./ErrorBoundary";
 
 const App = () => {
   return (
@@ -22,5 +23,11 @@ const App = () => {
   );
 };
 
+const WrappedApp = props => (
+  <ErrorBoundary>
+    <App {...props} />
+  </ErrorBoundary>
+);
+
 const root = document.getElementById("root");
-render(<App />, root);
+render(<WrappedApp />, root);
