@@ -1,2 +1,2 @@
 # React Workshop Application
-Sample react js aplication showing important concepts and patterns
+Sample react js application showing important concepts and patterns
